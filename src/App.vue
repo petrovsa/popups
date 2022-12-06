@@ -1,17 +1,53 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div>
+    <button @click="openPopup">Відкрити вікно</button>
+    <PopupModal
+      :is-open="isPopupOpen"
+      @close="isPopupOpen = false"
+      @ok="popupConfirmed"
+    >
+      Ви дійсно хочете освоїти правильні підходи?
+      <template #actions="{ ok }">
+        Напишіть
+        <input
+          v-model="confirmation"
+          :placeholder="$options.CONFIRMATION_TEXT"
+        />
+        &nbsp;
+        <button :disabled="!isConfirmationCerrect" @click="ok">Ok</button>
+      </template>
+    </PopupModal>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
+import PopupModal from "./components/PopupModal.vue";
 export default {
   name: "App",
   components: {
-    HelloWorld,
+    PopupModal,
+  },
+  data() {
+    return {
+      isPopupOpen: false,
+      confirmation: "",
+    };
+  },
+  methods: {
+    popupConfirmed() {
+      alert("confirmed");
+      this.isPopupOpen = false;
+    },
+    openPopup() {
+      this.confirmation = "";
+      this.isPopupOpen = true;
+    },
+  },
+  CONFIRMATION_TEXT: "ПІДТВЕРДЖУЮ",
+  computed: {
+    isConfirmationCerrect() {
+      return this.confirmation === this.$options.CONFIRMATION_TEXT;
+    },
   },
 };
 </script>
